@@ -24,6 +24,30 @@ Creatures are soft rather than rigid fruit, which makes the game a bit more forg
 
 Every tuning knob is a constant at the top of `World`.
 
+## Download
+
+Every push to the default branch is built by GitHub Actions and published as a Release. Grab the
+newest APK on your phone from **Releases → latest → `suikaween.apk`**, or directly at
+`https://github.com/MOEG-5/suikaween/releases/latest/download/suikaween.apk`.
+Builds from other branches and pull requests are attached to their workflow run as artifacts.
+
+### Release signing
+
+For each build to install as an update over the last one (keeping your best score), they must
+all be signed with the same key. Add these repository secrets (Settings → Secrets and variables →
+Actions):
+
+| Secret | Value |
+| --- | --- |
+| `SIGNING_KEYSTORE_BASE64` | your keystore file, base64-encoded (`base64 -w0 release.keystore`) |
+| `SIGNING_STORE_PASSWORD` | keystore password |
+| `SIGNING_KEY_ALIAS` | key alias |
+| `SIGNING_KEY_PASSWORD` | key password |
+
+Create a keystore once with
+`keytool -genkeypair -keystore release.keystore -alias suikaween -keyalg RSA -keysize 2048 -validity 10000`
+and keep it somewhere safe. Without the secrets, builds still work but use a throwaway debug key.
+
 ## Build
 
 Requires JDK 17+ and the Android SDK (platform 35).
