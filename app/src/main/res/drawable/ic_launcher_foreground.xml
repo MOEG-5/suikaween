@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- A squishy jack-o'-lantern. 108dp canvas, art kept inside the 66dp safe zone. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <path android:fillColor="#4E6B2A"
+        android:pathData="M52,34 Q53,27 58,24 L60,26 Q56,29 56,34 Z" />
+    <path android:fillColor="#E8650C" android:strokeColor="#7A3306" android:strokeWidth="2"
+        android:pathData="M54,33 C72,33 80,42 80,56 C80,70 70,78 54,78 C38,78 28,70 28,56 C28,42 36,33 54,33 Z" />
+    <path android:fillColor="#FFD447"
+        android:pathData="M40,53 L48,53 L44,45 Z M60,53 L68,53 L64,45 Z" />
+    <path android:fillColor="#FFD447"
+        android:pathData="M38,60 Q54,66 70,60 Q66,72 54,72 Q42,72 38,60 Z" />
+</vector>
