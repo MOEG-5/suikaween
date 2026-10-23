@@ -274,10 +274,14 @@ class GameView(context: Context, private val world: World) : View(context) {
         val py = sy(b.y)
         val unit = b.r * scale
 
+        val artDeg = Math.toDegrees(b.artAngle.toDouble()).toFloat()
+        val ax = unit * cr.artScaleX
+        val ay = unit * cr.artScaleY
+
         c.save()
         c.translate(px, py)
-        c.rotate(Math.toDegrees(b.angle.toDouble()).toFloat())
-        c.scale(unit, unit)
+        c.rotate(artDeg)
+        c.scale(ax, ay)
         CreatureArt.drawBehind(c, cr, time + b.hashCode() % 100)
         c.restore()
 
@@ -290,8 +294,8 @@ class GameView(context: Context, private val world: World) : View(context) {
         c.clipPath(bodyPath)
         c.save()
         c.translate(px, py)
-        c.rotate(Math.toDegrees(b.angle.toDouble()).toFloat())
-        c.scale(unit, unit)
+        c.rotate(artDeg)
+        c.scale(ax, ay)
         CreatureArt.drawFace(c, cr, time + b.hashCode() % 100)
         c.restore()
         // Lighting stays screen-aligned so the shine doesn't spin with the body.
@@ -366,7 +370,8 @@ class GameView(context: Context, private val world: World) : View(context) {
         c.drawText("NEXT", nx, top + 1.5f * scale, text)
         c.save()
         c.translate(nx, ny)
-        val u = min(world.next.radius, 6f) * scale
+        val nc = world.next
+        val u = min(nc.radius, 6.2f / max(nc.artScaleX, nc.artScaleY)) * scale
         c.scale(u, u)
         CreatureArt.drawIcon(c, world.next, time)
         c.restore()
@@ -379,7 +384,7 @@ class GameView(context: Context, private val world: World) : View(context) {
             val cx = jarRect.left + (cr.ordinal + 0.5f) * step * scale
             c.save()
             c.translate(cx, stripY)
-            val u = (2.2f + cr.ordinal * 0.16f) * scale
+            val u = min(2.2f + cr.ordinal * 0.16f, 4.2f / max(cr.artScaleX, cr.artScaleY)) * scale
             c.scale(u, u)
             CreatureArt.drawIcon(c, cr, time)
             c.restore()

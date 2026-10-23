@@ -382,17 +382,32 @@ object CreatureArt {
         c.drawRect(-1.6f, -1.6f, 1.6f, 1.6f, shine)
     }
 
-    /** Draws a rigid (undeformed) creature at the origin of radius 1; used for previews and HUD. */
+    /**
+     * Draws a rigid (undeformed) creature upright at the origin; used for previews and the HUD.
+     * One unit is the creature's equal-area radius, so ovals are wider or taller than 1.
+     */
     fun drawIcon(c: Canvas, creature: Creature, time: Float, outlineWidth: Float = 0.08f) {
-        drawBehind(c, creature, time)
-        path.reset()
-        path.addCircle(0f, 0f, 1f, Path.Direction.CW)
-        c.drawPath(path, f(creature.color))
+        val sx = creature.artScaleX
+        val sy = creature.artScaleY
         c.save()
-        c.clipPath(path)
+        c.scale(sx, sy)
+        drawBehind(c, creature, time)
+        c.restore()
+        oval.set(-sx, -sy, sx, sy)
+        iconPath.reset()
+        iconPath.addOval(oval, Path.Direction.CW)
+        c.drawPath(iconPath, f(creature.color))
+        c.save()
+        c.clipPath(iconPath)
+        c.save()
+        c.scale(sx, sy)
         drawFace(c, creature, time)
+        c.restore()
         drawLighting(c)
         c.restore()
-        c.drawCircle(0f, 0f, 1f, s(outlineColor(creature), outlineWidth))
+        // Stroke in unstretched space so the outline keeps an even width.
+        c.drawOval(oval, s(outlineColor(creature), outlineWidth))
     }
+
+    private val iconPath = Path()
 }

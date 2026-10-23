@@ -20,9 +20,28 @@ Creatures are soft rather than rigid fruit, which makes the game a bit more forg
   (`COLLIDE_FRACTION`), so neighbours press into each other. Each outline is a ring of springy
   vertices that flatten into a shared contact face, bulge elsewhere to keep their area, and
   wobble on impacts and merges (`World.updateShapes`).
-- The physics stays a stable position-based circle solver, so big piles don't jitter or explode.
+- The physics is a stable position-based solver in small substeps, with inelastic contacts and a
+  cap on how much speed a contact can add, so big piles settle instead of jittering or exploding.
 
 Every tuning knob is a constant at the top of `World`.
+
+## Shapes and sizes
+
+Not every creature is round. Candy Corn, Bat, Ghost, Black Cat, Mummy, Pumpkin and
+Jack-o'-Lantern are ovals (`Creature.aspect`), and they really are oval to the physics: each body
+is a capsule, so wide ones sit flat, tall ones topple onto their side, and pieces rock and roll
+off each other. Every creature has the same area as a circle of its `radius`, so tiers stay
+comparable whatever their shape.
+
+Sizes are tuned so the biggest creature is about half the jar: two Jack-o'-Lanterns only just fit
+side by side (a unit test pins this), while the smallest are around a tenth of the jar's width.
+
+`BalanceSimulation` lets simple bots play whole games and prints how far they get, which is
+handy when tuning sizes or the jar. It is skipped unless `SIM` is set:
+
+```sh
+SIM=1 ./gradlew testDebugUnitTest --tests '*BalanceSimulation*' -i
+```
 
 ## Download
 
@@ -62,7 +81,7 @@ The render test writes real frames to `app/build/screenshots/`.
 
 ## Code map
 
-- `World.kt`: physics, merging, scoring, game over, and soft-body outlines (pure Kotlin)
-- `Tiers.kt`: the creature chain (sizes, colours, points)
+- `World.kt`: capsule physics, merging, scoring, game over, and soft-body outlines (pure Kotlin)
+- `Tiers.kt`: the creature chain (sizes, shapes, colours, points)
 - `CreatureArt.kt`: procedural Canvas drawings of every creature (no image assets)
 - `GameView.kt`: game loop, rendering, effects, HUD, and touch input

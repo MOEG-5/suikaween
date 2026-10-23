@@ -50,13 +50,21 @@ class RenderTest {
     @Test
     fun everyCreature() {
         val world = World(Random(1))
+        // Lay the roster out in rows from the floor up, biggest first, each at its resting angle.
         var x = 0f
-        var y = World.HEIGHT
+        var floor = World.HEIGHT
+        var rowHeight = 0f
         for (c in Creature.entries.reversed()) {
-            val r = c.radius
-            if (x + 2 * r > World.WIDTH) { x = 0f; y -= 44f }
-            world.add(c, x + r, y - r * World.COLLIDE_FRACTION)
-            x += 2 * r
+            if (x + 2 * c.halfWidth > World.WIDTH) {
+                x = 0f
+                floor -= rowHeight + 3f
+                rowHeight = 0f
+            }
+            val b = world.add(c, x + c.halfWidth, floor - c.halfHeight * World.COLLIDE_FRACTION)
+            b.angle = c.restAngle
+            b.refreshAxis()
+            x += 2 * c.halfWidth
+            rowHeight = maxOf(rowHeight, 2 * c.halfHeight)
         }
         world.updateShapes(1f / 60f)
         render(world, "every_creature")
